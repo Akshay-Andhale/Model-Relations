@@ -1,0 +1,50 @@
+from django.db import models
+from django.db.models.deletion import CASCADE
+
+# Create your models here.
+class IInterest(models.Model):
+    title = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.title
+
+
+class CCity(models.Model):
+    ctitle = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.ctitle
+
+
+
+
+class PPerson(models.Model):
+    name = models.CharField(max_length=40)
+    mobile = models.CharField(max_length=40)
+    interests = models.ManyToManyField(IInterest)
+    # MANY(>=1) can select MANY interests ie--
+    # while person object is created,one person may have many interests,One interest can be of many persons
+
+    def __str__(self):
+        return self.name
+
+
+class Address(models.Model):
+    street = models.CharField(max_length=40)
+    person = models.OneToOneField(PPerson,on_delete=models.CASCADE)
+    # one person = one address , one adress = one person ONLY ONE time
+
+
+
+    # city = models.ManyToManyField(City)
+    # if its is like this,then,MANY(>=1 person) can select MANY Cities
+
+
+
+    city = models.ForeignKey(CCity,on_delete=CASCADE)
+    # The above persons(>=1)[MANY] can select ONE city MANY times
+
+    
+
+    def __str__(self):
+        return self.person.name
